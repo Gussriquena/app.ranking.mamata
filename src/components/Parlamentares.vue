@@ -9,10 +9,6 @@
                 </div>
             </div>
         </div>
-
-        <ul v-for="deputado in parlamentares" v-bind:key="deputado">
-            <li>{{ deputado.id }}</li>
-        </ul>
     </div>
 </template>
 
