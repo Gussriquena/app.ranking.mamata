@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <Parlamentares />
+    <Ranking />
   </div>
 </template>
 
 <script>
-import Parlamentares from './components/Parlamentares.vue'
+import Ranking from './components/Ranking.vue'
 
 export default {
   name: 'App',
   components: {
-    Parlamentares
+    Ranking
   }
 }
 </script>

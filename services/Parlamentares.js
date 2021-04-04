@@ -8,5 +8,13 @@ export default {
                 ordenarPor: 'nome'
             }
         })
+    },
+    getParlamentar: (parlamentarId) => {
+        return https.get('deputados/'+parlamentarId+'/despesas', {
+            params: {
+                pagina: '1',
+                itens: '180'
+            }
+        })
     }
 }
