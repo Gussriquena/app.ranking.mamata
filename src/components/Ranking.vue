@@ -33,33 +33,33 @@ export default {
 
                 for(var deputado in this.deputados){
 
-                    console.log(this.deputados[deputado].nome + ' - ' + this.deputados[deputado].id)
+                    //console.log(this.deputados[deputado].nome + ' - ' + this.deputados[deputado].id)
+                    let idDeputado = this.deputados[deputado].id;
+                    let nome = this.deputados[deputado].nome;
+                    let urlFoto = this.deputados[deputado].urlFoto;
+                    let siglaPartido = this.deputados[deputado].siglaPartido;
+                    let siglaUf = this.deputados[deputado].siglaUf;
+
                     Parlamentares.getParlamentar(this.deputados[deputado].id).then(response => {
                         gastosDeputadoAtual = response.data.dados;
 
                         let valorTotalDep = 0;
                         let valorUnitario = [];
+
                         gastosDeputadoAtual.forEach((gasto) => valorUnitario.push(gasto.valorLiquido))
                         valorUnitario.forEach((valorUnico) => valorTotalDep += valorUnico)
 
                         this.gastoParlamentar.push({
-                            idDeputado: this.deputados[deputado].id,
-                            nome: this.deputados[deputado].nome,
-                            urlFoto: this.deputados[deputado].urlFoto,
-                            siglaPartido: this.deputados[deputado].siglaPartido,
-                            siglaUf: this.deputados[deputado].siglaUf,
+                            idDeputado: idDeputado,
+                            nome: nome,
+                            urlFoto: urlFoto,
+                            siglaPartido: siglaPartido,
+                            siglaUf: siglaUf,
                             gastoTotal: valorTotalDep,
                             gastosIndividuais: valorUnitario,
                             gastoDeputado: gastosDeputadoAtual
                         })
-
-
                     })
-
-
-
-                    //console.log(JSON.parse(JSON.stringify(gastosDeputadoAtual)))
-
                 }
             })
 
