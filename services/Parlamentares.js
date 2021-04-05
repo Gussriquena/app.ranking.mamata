@@ -13,7 +13,9 @@ export default {
         return https.get('deputados/'+parlamentarId+'/despesas', {
             params: {
                 pagina: '1',
-                itens: '180'
+                itens: '180',
+                ano: '2021',
+                mes: '01'
             }
         })
     }
