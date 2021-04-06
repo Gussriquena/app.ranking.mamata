@@ -1,9 +1,9 @@
 <template>
     <div id="rankingList">
 
-        <div v-for="(gastos, index) in todosGastoParlamentar" v-bind:key="index">
+        <div v-for="(gastos, index) in gastosPorParlamentarResumido" v-bind:key="index">
             <h1></h1>
-            <p>{{ gastos.gastoDeputado }}</p>
+            <p>{{ gastos.nome }} - <b>R$ {{ formatPrice(gastos.gastoTotal) }}</b></p>
 
         </div>
     </div>
@@ -17,12 +17,14 @@ export default {
     data(){
         return {
             deputados: [],
-            todosGastoParlamentar: [],
-            gastoParlamentar: []
+            gastosPorParlamentarCompleto: [],
+            gastosPorParlamentarResumido: [],
+            gastosRanking: []
         }
     },
     mounted(){
         this.getDespesasDeputados()
+        //this.getBiggestValues()
     },
     methods: {
         getDespesasDeputados(){
@@ -32,8 +34,6 @@ export default {
                 this.deputados = response.data.dados;
 
                 for(var deputado in this.deputados){
-
-                    //console.log(this.deputados[deputado].nome + ' - ' + this.deputados[deputado].id)
                     let idDeputado = this.deputados[deputado].id;
                     let nome = this.deputados[deputado].nome;
                     let urlFoto = this.deputados[deputado].urlFoto;
@@ -44,30 +44,32 @@ export default {
                         gastosDeputadoAtual = response.data.dados;
 
                         let valorTotalDep = 0;
-                        let valorUnitario = [];
+                        //let valorUnitario = [];
 
-                        gastosDeputadoAtual.forEach((gasto) => valorUnitario.push(gasto.valorLiquido))
-                        valorUnitario.forEach((valorUnico) => valorTotalDep += valorUnico)
+                        //gastosDeputadoAtual.forEach((gasto) => valorUnitario.push(gasto.valorLiquido))
+                        gastosDeputadoAtual.forEach((gasto) => valorTotalDep += gasto.valorLiquido)
 
-                        this.gastoParlamentar.push({
+                        this.gastosPorParlamentarCompleto.push({
                             idDeputado: idDeputado,
                             nome: nome,
                             urlFoto: urlFoto,
                             siglaPartido: siglaPartido,
                             siglaUf: siglaUf,
                             gastoTotal: valorTotalDep,
-                            gastosIndividuais: valorUnitario,
                             gastoDeputado: gastosDeputadoAtual
+                        })
+
+                        this.gastosPorParlamentarResumido.push({
+                            nome: nome,
+                            gastoTotal: valorTotalDep
+                        })
+
+                        this.gastosPorParlamentarResumido.sort(function(b, a){
+                            return a.gastoTotal - b.gastoTotal
                         })
                     })
                 }
             })
-
-            //console.log(this.deputados)
-            //this.todosGastoParlamentar = gastosDeputadoAtual;
-            //this.gastoParlamentar.push(objGastoDep);
-
-            //console.log(this.gastoParlamentar)
         },
         getDespesasMocked(){
             let gastosDeputadoAtual = [];
@@ -77,29 +79,9 @@ export default {
 
             this.gastoParlamentar.push({idDep: 204379, gastosDeputadoAtual})
         },
-
-        getAllDespesas(){
-            console.log(this.deputados)
-            for(var deputado in this.deputados){
-                //console.log(this.deputados[deputado].id);
-                //console.log(this.deputados[deputado].id);
-                Parlamentares.getParlamentar(this.deputados[deputado].id).then(response => {
-                    //console.log(id);
-                    this.todosgastoParlamentar = response.data.dados;
-                    //console.log(response.data.dados);
-                    //console.log(this.deputados[deputado].id);
-
-                    //this.parlamentaresId = response.data;
-                    //this.gastoParlamentar[]
-
-                    for(var gasto in this.todosgastoParlamentar){
-                        this.gastoParlamentar.push(this.todosgastoParlamentar[gasto].valorLiquido)
-                        //console.log(this.deputados[deputado].id + ' - ' + this.gastoParlamentar[gasto].valorLiquido);
-                    }
-
-                    console.info(this.deputados[deputado].id + "    -     " + this.gastoParlamentar)
-                })
-            }
+        formatPrice(value) {
+            let val = (value/1).toFixed(2).replace('.', ',')
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         }
     }
 }
